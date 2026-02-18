@@ -33,8 +33,8 @@ const GarageCard = ({ garage }: { garage: Garage }) => {
           </h3>
           <div className="flex items-center gap-1 text-accent shrink-0">
             <Star className="w-4 h-4 fill-current" />
-            <span className="text-sm font-semibold">{garage.rating}</span>
-            <span className="text-xs text-muted-foreground">({garage.reviewCount})</span>
+            <span className="text-sm font-semibold">{(garage.rating ?? 0).toFixed ? (garage.rating ?? 0).toFixed(1) : String(garage.rating ?? 0)}</span>
+            <span className="text-xs text-muted-foreground">({garage.reviewCount ?? 0})</span>
           </div>
         </div>
 

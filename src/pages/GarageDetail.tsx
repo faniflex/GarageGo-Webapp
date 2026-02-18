@@ -41,7 +41,7 @@ const GarageDetail = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [newRating, setNewRating] = useState(5);
+  const [newRating, setNewRating] = useState(0);
   const [newComment, setNewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -49,14 +49,25 @@ const GarageDetail = () => {
     if (!id) return;
     const fetchGarage = async () => {
       const { data } = await supabase.from("garages").select("*").eq("id", id).single();
-      setGarage(data as GarageData | null);
 
       const { data: revs } = await supabase
         .from("reviews")
         .select("*")
         .eq("garage_id", id)
         .order("created_at", { ascending: false });
-      setReviews((revs as Review[]) || []);
+
+      const reviewsArr = (revs as Review[]) || [];
+
+      // Compute average rating and count from reviews to ensure accurate display
+      const count = reviewsArr.length;
+      const avg = count > 0 ? Number((reviewsArr.reduce((s, r) => s + (r.rating || 0), 0) / count).toFixed(1)) : 0;
+
+      setGarage((prev) => ({
+        ...(data as GarageData),
+        rating: avg,
+        review_count: count,
+      } as GarageData));
+      setReviews(reviewsArr);
       setLoading(false);
     };
     fetchGarage();
@@ -76,14 +87,24 @@ const GarageDetail = () => {
     } else {
       toast({ title: "Review submitted!" });
       setNewComment("");
-      setNewRating(5);
+      setNewRating(0);
       // Refresh reviews
       const { data: revs } = await supabase
         .from("reviews")
         .select("*")
         .eq("garage_id", id)
         .order("created_at", { ascending: false });
-      setReviews((revs as Review[]) || []);
+
+      const reviewsArr = (revs as Review[]) || [];
+      setReviews(reviewsArr);
+
+      // Recompute aggregates and persist to garages table
+      const count = reviewsArr.length;
+      const avg = count > 0 ? Number((reviewsArr.reduce((s, r) => s + (r.rating || 0), 0) / count).toFixed(1)) : 0;
+
+      await supabase.from("garages").update({ rating: avg, review_count: count }).eq("id", id);
+
+      setGarage((prev) => (prev ? { ...prev, rating: avg, review_count: count } : prev));
     }
     setSubmitting(false);
   };

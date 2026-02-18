@@ -36,7 +36,7 @@ const SparePartCard = ({ part }: { part: SparePart }) => {
           </p>
           <div className="flex items-center gap-1 text-accent">
             <Star className="w-3.5 h-3.5 fill-current" />
-            <span className="text-sm font-medium">{part.rating}</span>
+            <span className="text-sm font-medium">{(part.rating ?? 0).toFixed ? (part.rating ?? 0).toFixed(1) : String(part.rating ?? 0)}</span>
           </div>
         </div>
 
