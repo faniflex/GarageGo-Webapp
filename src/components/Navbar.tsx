@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Car, Menu, X, LogOut, User } from "lucide-react";
-import { useState } from "react";
+import { Car, Menu, X, LogOut, User, Sun, Moon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toggleTheme } from "@/lib/theme";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
@@ -13,7 +14,12 @@ const navLinks = [
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const { user, signOut, userRole } = useAuth();
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-lg border-b">
@@ -42,6 +48,17 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              toggleTheme();
+              setIsDark(document.documentElement.classList.contains("dark"));
+            }}
+            aria-label="Toggle theme"
+          >
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
           {user ? (
             <>
               <Button variant="outline" size="sm" asChild>
@@ -80,6 +97,23 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="md:hidden border-t bg-card animate-fade-in">
           <div className="container py-4 flex flex-col gap-2">
+            <div className="flex items-center justify-end">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  toggleTheme();
+                  setIsDark(document.documentElement.classList.contains("dark"));
+                }}
+                aria-label="Toggle theme"
+              >
+                {isDark ? (
+                  <Sun className="w-5 h-5 text-foreground" />
+                ) : (
+                  <Moon className="w-5 h-5 text-foreground" />
+                )}
+              </Button>
+            </div>
             {navLinks.map((link) => (
               <Link
                 key={link.path}
