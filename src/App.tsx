@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Garages from "./pages/Garages";
 import GarageDetail from "./pages/GarageDetail";
+import SparePartDetail from "./pages/SparePartDetail";
 import SpareParts from "./pages/SpareParts";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
@@ -14,6 +15,7 @@ import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +31,7 @@ const App = () => (
             <Route path="/garages" element={<Garages />} />
             <Route path="/garages/:id" element={<GarageDetail />} />
             <Route path="/spare-parts" element={<SpareParts />} />
+            <Route path="/spare-parts/:id" element={<SparePartDetail />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/auth" element={<Auth />} />
@@ -36,6 +39,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <MobileBottomNav />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

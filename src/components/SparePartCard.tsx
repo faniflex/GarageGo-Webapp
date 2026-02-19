@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Star, MapPin, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,7 @@ import type { SparePart } from "@/data/mockData";
 
 const SparePartCard = ({ part }: { part: SparePart }) => {
   return (
-    <div className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 group">
+    <Link to={`/spare-parts/${part.id}`} className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 group block">
       <div className="relative h-44 overflow-hidden">
         <img
           src={part.image}
@@ -51,7 +52,7 @@ const SparePartCard = ({ part }: { part: SparePart }) => {
           Contact Seller
         </Button>
       </div>
-    </div>
+    </Link>
   );
 };
 
