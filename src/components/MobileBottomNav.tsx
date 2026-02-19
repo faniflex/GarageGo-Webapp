@@ -1,12 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, MessageSquare, BarChart2, Zap, Settings } from "lucide-react";
+import { Home, MessageSquare, MapPin, ShoppingCart, Settings } from "lucide-react";
 
+// Order: Home, Find Garages, Spare Parts, Message (Inbox), Settings
 const items = [
   { icon: Home, to: "/", label: "Home" },
+  { icon: MapPin, to: "/garages", label: "Find Garages" },
+  { icon: ShoppingCart, to: "/spare-parts", label: "Spare Parts" },
   { icon: MessageSquare, to: "/inbox", label: "Inbox" },
-  { icon: BarChart2, to: "/dashboard", label: "Dashboard" },
-  { icon: Zap, to: "/garages", label: "Find Garages" },
-  { icon: Settings, to: "/profile", label: "Profile" },
+  { icon: Settings, to: "/settings", label: "Settings" },
 ];
 
 const MobileBottomNav = () => {
