@@ -8,12 +8,52 @@ import { garages, spareParts } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
 
 const Index = () => {
+  const { user, signOut, userRole } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
+      {/* Mobile-only auth CTAs since top navbar is hidden on small screens */}
+      {!user ? (
+        <div className="container py-4 md:hidden">
+          <div className="flex gap-2">
+            <Button asChild className="flex-1">
+              <Link to="/auth">Sign In</Link>
+            </Button>
+            <Button asChild variant="outline" className="flex-1">
+              <Link to="/auth">Sign Up</Link>
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="container py-4 md:hidden">
+          <div className="bg-card rounded-xl p-3 flex items-center justify-between">
+            <div>
+              <p className="font-medium">{user.email}</p>
+              <p className="text-sm text-muted-foreground">{userRole ?? "User"}</p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/profile">Profile</Link>
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                <LogOut className="w-4 h-4 mr-2" /> Sign Out
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       <FeaturesSection />
 
       {/* Top Garages Preview */}
