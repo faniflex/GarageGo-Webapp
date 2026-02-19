@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,6 +36,7 @@ const GarageDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const [garage, setGarage] = useState<GarageData | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -243,9 +244,39 @@ const GarageDetail = () => {
                   <Phone className="w-4 h-4" /> {garage.phone}
                 </a>
               )}
-              <Button className="w-full mt-4">
-                <Phone className="w-4 h-4" /> Call Now
-              </Button>
+                <div className="flex flex-col gap-2">
+                  <Button className="w-full mt-2">
+                    <Phone className="w-4 h-4" /> Call Now
+                  </Button>
+                  {user && garage && garage.owner_id && user.id !== garage.owner_id && (
+                    <Button className="w-full mt-2" onClick={async () => {
+                      // create or find conversation between current user and garage owner
+                      const ownerId = garage.owner_id as string;
+                      const pOne = user.id < ownerId ? user.id : ownerId;
+                      const pTwo = user.id < ownerId ? ownerId : user.id;
+                      // try to find existing
+                      const { data: existing } = await supabase
+                        .from("conversations")
+                        .select("*")
+                        .eq("participant_one", pOne)
+                        .eq("participant_two", pTwo)
+                        .eq("garage_id", id)
+                        .limit(1);
+                      if (existing && existing.length > 0) {
+                        navigate(`/chat?cid=${existing[0].id}`);
+                        return;
+                      }
+                      const { data, error } = await supabase.from("conversations").insert({ participant_one: pOne, participant_two: pTwo, garage_id: id }).select().single();
+                      if (error) {
+                        toast({ title: "Error", description: error.message, variant: "destructive" });
+                        return;
+                      }
+                      navigate(`/chat?cid=${(data as any).id}`);
+                    }}>
+                      <Send className="w-4 h-4" /> Message this Garage
+                    </Button>
+                  )}
+                </div>
             </div>
           </div>
         </div>

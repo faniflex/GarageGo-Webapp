@@ -4,6 +4,7 @@ import { Car, LogOut, User, Sun, Moon, Settings as SettingsIcon } from "lucide-r
 import { useEffect, useState } from "react";
 import { toggleTheme } from "@/lib/theme";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -15,6 +16,25 @@ const Navbar = () => {
   const location = useLocation();
   const [isDark, setIsDark] = useState(false);
   const { user, signOut, userRole } = useAuth();
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => {
+    if (!user) return setUnread(0);
+    let mounted = true;
+    const fetchUnread = async () => {
+      // fetch conversations for this user
+      const { data: convs } = await supabase
+        .from("conversations")
+        .select("id")
+        .or(`participant_one.eq.${user.id},participant_two.eq.${user.id}`);
+      const ids = (convs || []).map((c: any) => c.id);
+      if (ids.length === 0) return mounted && setUnread(0);
+      const { count } = await supabase.from("messages").select("id", { count: "exact", head: false }).in("conversation_id", ids).eq("read", false).neq("sender_id", user.id);
+      if (mounted) setUnread(count || 0);
+    };
+    fetchUnread();
+    return () => { mounted = false; };
+  }, [user]);
 
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains("dark"));
@@ -65,6 +85,14 @@ const Navbar = () => {
           </Button>
           {user ? (
             <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/chat">Messages {unread > 0 && <span className="ml-1 text-xs">({unread})</span>}</Link>
+              </Button>
+              {userRole === "admin" && (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/admin">Admin Panel</Link>
+                </Button>
+              )}
               <Button variant="outline" size="sm" asChild>
                 <Link to="/dashboard">Dashboard</Link>
               </Button>

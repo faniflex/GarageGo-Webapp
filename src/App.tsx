@@ -16,6 +16,8 @@ import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import AdminPanel from "./pages/AdminPanel";
+import Chat from "./pages/Chat";
 import MobileBottomNav from "@/components/MobileBottomNav";
 
 const queryClient = new QueryClient();
@@ -35,6 +37,8 @@ const App = () => (
             <Route path="/spare-parts/:id" element={<SparePartDetail />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
