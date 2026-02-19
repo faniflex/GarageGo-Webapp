@@ -1,73 +1,185 @@
-# Welcome to your Lovable project
+# GarageGo — Webapp
 
-## Project info
+A Vite + React + TypeScript frontend for the GarageGo marketplace (client-only repository).
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This README provides a comprehensive guide to setting up, running, developing, and deploying the project locally. It includes notes about authentication, Supabase integration, routing, and mobile-specific behaviors.
 
-## How can I edit this code?
+Table of contents
+- Overview
+- Features
+- Tech stack
+- Prerequisites
+- Getting started (local development)
+- Environment variables
+- Running, building, previewing
+- Linting & testing
+- Supabase integration & database notes
+- Routing and pages
+- Project structure and conventions
+- Mobile behavior and accessibility notes
+- Troubleshooting
+- Contributing
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+Overview
+--------
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+GarageGo is a client-side web application that lists garages and spare parts, allows browsing details, and connects to a Supabase backend for authentication and persistency. The repo includes mock data in `src/data/mockData.ts` so core UI flows are usable without backend setup.
 
-Changes made via Lovable will be committed automatically to this repo.
+Features
+--------
 
-**Use your preferred IDE**
+- Browse and search garages
+- Browse and view spare parts
+- Garage detail pages with reviews
+- Spare part detail pages
+- Authentication via Supabase (email-based)
+- Responsive layout with a mobile bottom navigation and desktop top navigation
+- Theme toggle (light/dark)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Tech stack
+----------
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Vite (development server and build)
+- React + TypeScript
+- Tailwind CSS + tailwind-merge
+- Radix UI primitives + shadcn-style components
+- Supabase (optional backend)
+- React Router for routing
+- TanStack Query for client-side fetching
+- Vitest for tests
 
-Follow these steps:
+Prerequisites
+-------------
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+- Node.js 18+ (use nvm / nvm-windows to manage versions)
+- npm (or pnpm / yarn)
+- Optional: Supabase project if you want to use real backend data
+
+Getting started (local development)
+---------------------------------
+
+1. Clone the repository and enter the folder:
+
+```bash
 git clone <YOUR_GIT_URL>
+cd GarageGo-Webapp
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+npm install
+# or: pnpm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. (Optional) Configure environment variables (see Environment section).
+
+4. Start the dev server:
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open the URL printed by Vite (typically http://localhost:5173).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Environment variables
+---------------------
 
-**Use GitHub Codespaces**
+If you plan to use Supabase, create a `.env.local` file in the project root with the following keys:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```text
+VITE_SUPABASE_URL=https://<project-ref>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=public-anon-key
+```
 
-## What technologies are used for this project?
+Notes
+- The app falls back to mock data from `src/data/mockData.ts` when env vars are not provided or Supabase is not reachable.
+- Never commit private or service role keys.
 
-This project is built with:
+Running, building, previewing
+-----------------------------
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- `npm run dev` — run local dev server (auto reload)
+- `npm run build` — build optimized production assets
+- `npm run preview` — preview production build locally
 
-## How can I deploy this project?
+Linting & testing
+-----------------
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- `npm run lint` — run ESLint across the repo
+- `npm run test` — run tests with Vitest
 
-## Can I connect a custom domain to my Lovable project?
+Supabase integration & database notes
+-----------------------------------
 
-Yes, you can!
+- The Supabase client is initialized at `src/integrations/supabase/client.ts` and reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
+- Typical tables expected by the app (example): `garages`, `spare_parts`, `reviews`, `users`. The SQL migration files (if any) live under `supabase/migrations/` in this repo — review them to see schema structure.
+- Authentication: this app uses Supabase Auth for session handling. Sessions are persisted to localStorage by the Supabase JS client (configured in `client.ts`).
+- Policies / RLS: ensure Row Level Security policies allow the operations your UI performs (select, insert for reviews, etc.). In development, you can relax RLS, but for production enable proper policies.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Routing and pages
+-----------------
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Main routes (see `src/App.tsx`):
+- `/` — Home / landing page
+- `/garages` — Garages list and search
+- `/garages/:id` — Garage detail
+- `/spare-parts` — Spare parts list
+- `/spare-parts/:id` — Spare part detail
+- `/dashboard` — User dashboard (requires auth)
+- `/profile` — Profile page
+- `/settings` — Settings page
+- `/auth` — Authentication (sign-in / sign-up)
+
+Project structure and conventions
+-------------------------------
+
+- `src/components/` — shared UI building blocks (cards, nav, UI primitives)
+- `src/pages/` — route-level components (one per route)
+- `src/data/mockData.ts` — fallback data used when Supabase is not configured
+- `src/lib/` — small utilities (theme init, helpers)
+
+Styling and theme
+-----------------
+
+- Tailwind CSS with utility-first classes drives the UI.
+- The theme is toggled using `src/lib/theme.ts` (applies `dark` class on `<html>`).
+
+Mobile behavior and accessibility notes
+-------------------------------------
+
+- On small screens the top header is hidden and a mobile bottom navigation is shown instead.
+- The Settings and Auth CTAs are accessible from the mobile UI (Home/Settings pages) because the desktop top navigation is hidden on small screens.
+- Keyboard and assistive-labels: interactive icons include `aria-label` when needed; add further ARIA attributes if you adjust components.
+
+Troubleshooting
+---------------
+
+- Syntax errors in JSX: check for unclosed tags or improperly nested fragments.
+- Vite errors about CSS `@import`: ensure `@import` rules appear before other Tailwind directives in CSS entry files.
+- Supabase auth not persisting: verify `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` are correct and CORS settings allow your dev origin.
+
+Contributing
+------------
+
+If you plan to contribute, please follow these conventions:
+
+- Run `npm run lint` and `npm run test` before opening a PR.
+- Keep changes focused and create small, reviewable commits.
+- Update `src/data/mockData.ts` when adding new UI that needs demo content.
+
+Optional extras I can add for you
+--------------------------------
+
+- `.env.example` file with env var names
+- A short CI workflow (GitHub Actions) that runs lint and tests
+- Seed script and example SQL to populate the Supabase dev DB
+
+If you want one of those, tell me which and I'll add it.
+
+---
+
+If anything in this README should be expanded (API docs, schema diagrams, dev tips), tell me which section and I will extend it.
+
