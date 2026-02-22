@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -129,7 +128,6 @@ const GarageDetail = () => {
           <p className="text-lg text-muted-foreground">Garage not found.</p>
           <Button asChild className="mt-4"><Link to="/garages">Back to Garages</Link></Button>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -281,7 +279,6 @@ const GarageDetail = () => {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

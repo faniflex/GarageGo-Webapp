@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import SparePartCard from "@/components/SparePartCard";
 import { spareParts as mockParts } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
@@ -93,7 +92,6 @@ const SpareParts = () => {
           </div>
         )}
       </main>
-      <Footer />
     </div>
   );
 };

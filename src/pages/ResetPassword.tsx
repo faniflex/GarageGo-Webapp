@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Lock, Car } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -62,7 +61,6 @@ const ResetPassword = () => {
           </form>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

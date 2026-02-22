@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import GarageCard from "@/components/GarageCard";
 import { garages as mockGarages } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
@@ -78,7 +77,6 @@ const Garages = () => {
           </div>
         )}
       </main>
-      <Footer />
     </div>
   );
 };

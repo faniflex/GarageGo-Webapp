@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import uploadImage from "@/integrations/supabase/storage";
@@ -470,7 +469,6 @@ const Dashboard = () => {
           </div>
         )}
       </main>
-      <Footer />
     </div>
   );
 };

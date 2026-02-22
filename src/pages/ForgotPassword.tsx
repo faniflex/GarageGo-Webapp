@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Mail, Car } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -63,7 +62,6 @@ const ForgotPassword = () => {
           )}
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

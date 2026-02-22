@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { spareParts as mockParts, type SparePart } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -64,7 +63,6 @@ const SparePartDetail = () => {
           <p className="text-lg text-muted-foreground">Spare part not found.</p>
           <Button asChild className="mt-4"><Link to="/spare-parts">Back to Spare Parts</Link></Button>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -119,7 +117,6 @@ const SparePartDetail = () => {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

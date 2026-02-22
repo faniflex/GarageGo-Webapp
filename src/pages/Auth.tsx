@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Car, Mail, Lock, User, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const roleOptions = [
   { value: "car_owner", label: "Car Owner", desc: "Find garages and buy parts" },
@@ -186,7 +185,6 @@ const Auth = () => {
           </form>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };
