@@ -56,13 +56,15 @@ const Index = () => {
                   <p className="text-lg font-medium">Welcome to GarageGo</p>
                 )}
               </div>
-              <div className="w-10 h-10 rounded-full overflow-hidden bg-muted flex items-center justify-center">
-                {avatarUrl ? (
-                  <img src={avatarUrl} alt="avatar" className="w-10 h-10 object-cover rounded-full" />
-                ) : user ? (
-                  <div className="w-10 h-10 bg-primary/10 flex items-center justify-center rounded-full text-sm">{(profileName || user.email || "U").charAt(0).toUpperCase()}</div>
-                ) : null}
-              </div>
+              {user && (
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="avatar" className="w-10 h-10 object-cover rounded-full" />
+                  ) : (
+                    <div className="w-10 h-10 bg-primary/10 flex items-center justify-center rounded-full text-sm">{(profileName || user.email || "U").charAt(0).toUpperCase()}</div>
+                  )}
+                </div>
+              )}
             </div>
             { !user ? (
               <div className="flex gap-3 mb-4">

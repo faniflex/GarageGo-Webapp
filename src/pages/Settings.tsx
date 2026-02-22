@@ -83,11 +83,6 @@ const Settings = () => {
               {isDark ? <Sun className="w-4 h-4 mr-2" /> : <Moon className="w-4 h-4 mr-2" />} Toggle Theme
             </Button>
           </div>
-
-          <div className="bg-card rounded-xl p-4">
-            <h2 className="font-medium mb-2">Account</h2>
-            <p className="text-sm text-muted-foreground">Manage your account settings from your profile page.</p>
-          </div>
         </div>
       </main>
     </div>

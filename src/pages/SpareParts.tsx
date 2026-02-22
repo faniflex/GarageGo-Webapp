@@ -56,8 +56,7 @@ const SpareParts = () => {
       <Navbar />
       <main className="container py-10">
         <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold mb-2">Spare Parts Marketplace</h1>
-          <p className="text-muted-foreground">Browse genuine spare parts from trusted sellers</p>
+          <h1 className="text-3xl font-heading font-bold">Spare Parts Marketplace</h1>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 mb-8">

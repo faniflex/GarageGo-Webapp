@@ -50,8 +50,7 @@ const Garages = () => {
       <Navbar />
       <main className="container py-10">
         <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold mb-2">Find Garages</h1>
-          <p className="text-muted-foreground">Browse verified garages and mechanics near you</p>
+          <h1 className="text-3xl font-heading font-bold">Find Garages</h1>
         </div>
 
         <div className="relative mb-8 max-w-md">
