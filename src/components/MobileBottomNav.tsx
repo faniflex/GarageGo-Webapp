@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, MessageSquare, MapPin, ShoppingCart, Settings } from "lucide-react";
 
-// Order: Home, Find Garages, Spare Parts, Message (Inbox), Settings
+// Order: Home, Find Garages, Spare Parts, Message (Chat), Settings
 const items = [
   { icon: Home, to: "/", label: "Home" },
   { icon: MapPin, to: "/garages", label: "Find Garages" },
   { icon: ShoppingCart, to: "/spare-parts", label: "Spare Parts" },
-  { icon: MessageSquare, to: "/inbox", label: "Inbox" },
+  { icon: MessageSquare, to: "/chat", label: "Messages" },
   { icon: Settings, to: "/settings", label: "Settings" },
 ];
 
