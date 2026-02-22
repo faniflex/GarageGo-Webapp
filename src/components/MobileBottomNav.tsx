@@ -12,6 +12,11 @@ const items = [
 
 const MobileBottomNav = () => {
   const location = useLocation();
+  // Hide bottom nav when a chat conversation is open (route /chat?id=...)
+  try {
+    const params = new URLSearchParams(location.search);
+    if (location.pathname === "/chat" && params.has("id")) return null;
+  } catch (e) {}
 
   const isActive = (to: string) => {
     if (to === "/") return location.pathname === "/";
