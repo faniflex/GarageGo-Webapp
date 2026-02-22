@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import AdminPanel from "./pages/AdminPanel";
 import Chat from "./pages/Chat";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import RequireAuth from "@/components/RequireAuth";
 
 const queryClient = new QueryClient();
 
@@ -31,15 +32,15 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/garages" element={<Garages />} />
-            <Route path="/garages/:id" element={<GarageDetail />} />
-            <Route path="/spare-parts" element={<SpareParts />} />
-            <Route path="/spare-parts/:id" element={<SparePartDetail />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/garages" element={<RequireAuth><Garages /></RequireAuth>} />
+            <Route path="/garages/:id" element={<RequireAuth><GarageDetail /></RequireAuth>} />
+            <Route path="/spare-parts" element={<RequireAuth><SpareParts /></RequireAuth>} />
+            <Route path="/spare-parts/:id" element={<RequireAuth><SparePartDetail /></RequireAuth>} />
+            <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+            <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
+            <Route path="/admin" element={<RequireAuth><AdminPanel /></RequireAuth>} />
+            <Route path="/chat" element={<RequireAuth><Chat /></RequireAuth>} />
+            <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
