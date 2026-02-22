@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,6 +19,8 @@ const Profile = () => {
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
   const [bio, setBio] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -39,6 +41,7 @@ const Profile = () => {
         setPhone(data.phone || "");
         setLocation(data.location || "");
         setBio(data.bio || "");
+        setAvatarUrl(data.avatar_url || null);
       }
       setLoading(false);
     };
@@ -61,6 +64,31 @@ const Profile = () => {
     setSaving(false);
   };
 
+  const handleAvatarChange = async (file?: File) => {
+    if (!user) return;
+    const f = file;
+    if (!f) return;
+
+    try {
+      const path = `${user.id}/${Date.now()}_${f.name}`;
+      const { error: uploadError } = await supabase.storage.from("images").upload(path, f, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data } = supabase.storage.from("images").getPublicUrl(path);
+      const publicUrl = data.publicUrl;
+      const { error: updateError } = await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("user_id", user.id);
+      if (updateError) throw updateError;
+      setAvatarUrl(publicUrl);
+      toast({ title: "Avatar updated" });
+    } catch (e: any) {
+      toast({ title: "Upload failed", description: e?.message || String(e), variant: "destructive" });
+    }
+  };
+
+  const onFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleAvatarChange(file);
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -74,8 +102,21 @@ const Profile = () => {
       <Navbar />
       <main className="container py-10 max-w-lg">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-            <User className="w-7 h-7 text-primary" />
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden relative">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="avatar" className="w-14 h-14 object-cover rounded-full" />
+            ) : (
+              <User className="w-7 h-7 text-primary" />
+            )}
+            <input ref={fileRef} type="file" accept="image/*" onChange={onFileInput} className="hidden" />
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="absolute -bottom-2 -right-2 bg-card rounded-full p-1 shadow-sm text-xs"
+              aria-label="Change avatar"
+            >
+              Edit
+            </button>
           </div>
           <div>
             <h1 className="text-2xl font-heading font-bold">My Profile</h1>

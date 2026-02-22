@@ -7,7 +7,7 @@ import type { Garage } from "@/data/mockData";
 const GarageCard = ({ garage }: { garage: Garage }) => {
   return (
     <Link to={`/garages/${garage.id}`} className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 group block">
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-36 md:h-48 overflow-hidden">
         <img
           src={garage.image}
           alt={garage.name}
@@ -26,9 +26,9 @@ const GarageCard = ({ garage }: { garage: Garage }) => {
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-4 md:p-5">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="font-heading font-semibold text-lg leading-tight">
+          <h3 className="font-heading font-semibold text-base md:text-lg leading-tight">
             {garage.name}
           </h3>
           <div className="flex items-center gap-1 text-accent shrink-0">

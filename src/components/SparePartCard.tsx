@@ -7,7 +7,7 @@ import type { SparePart } from "@/data/mockData";
 const SparePartCard = ({ part }: { part: SparePart }) => {
   return (
     <Link to={`/spare-parts/${part.id}`} className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 group block">
-      <div className="relative h-44 overflow-hidden">
+      <div className="relative h-32 md:h-44 overflow-hidden">
         <img
           src={part.image}
           alt={part.name}
@@ -25,8 +25,8 @@ const SparePartCard = ({ part }: { part: SparePart }) => {
         </Badge>
       </div>
 
-      <div className="p-5">
-        <h3 className="font-heading font-semibold mb-1 leading-tight">
+      <div className="p-4 md:p-5">
+        <h3 className="font-heading font-semibold mb-1 leading-tight text-sm md:text-base">
           {part.name}
         </h3>
         <p className="text-xs text-muted-foreground mb-2">{part.carModel}</p>
