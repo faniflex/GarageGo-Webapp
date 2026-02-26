@@ -38,7 +38,7 @@ const App = () => (
             <Route path="/spare-parts/:id" element={<RequireAuth><SparePartDetail /></RequireAuth>} />
             <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
             <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
-            <Route path="/admin" element={<RequireAuth><AdminPanel /></RequireAuth>} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="/chat" element={<RequireAuth><Chat /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
             <Route path="/auth" element={<Auth />} />
