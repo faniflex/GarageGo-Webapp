@@ -27,6 +27,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userRole, setUserRole] = useState<string | null>(null);
 
   const fetchUserRole = async (userId: string) => {
+    // Check admin first (user may have multiple roles)
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+    if (isAdmin) {
+      setUserRole("admin");
+      return;
+    }
     const { data } = await supabase.rpc("get_user_role", { _user_id: userId });
     setUserRole(data as string | null);
   };

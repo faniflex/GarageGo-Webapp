@@ -17,6 +17,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import AdminPanel from "./pages/AdminPanel";
+import AdminLogin from "./pages/AdminLogin";
 import Chat from "./pages/Chat";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import RequireAuth from "@/components/RequireAuth";
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
             <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
             <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/chat" element={<RequireAuth><Chat /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
             <Route path="/auth" element={<Auth />} />

@@ -1,15 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-
-type AdminCredential = {
-  username: string;
-  password: string;
-};
+import { Loader2 } from "lucide-react";
 
 type GarageRow = {
   id: string;
@@ -36,28 +31,35 @@ type UserRow = {
 
 type MutableTable = "garages" | "spare_parts";
 
-const AUTHORIZED_ADMINS: AdminCredential[] = [
-  { username: "admin", password: "Admin@123" },
-  { username: "manager", password: "Manager@123" },
-];
-
 const AdminPanel = () => {
   const { toast } = useToast();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [authError, setAuthError] = useState("");
+  const navigate = useNavigate();
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [tab, setTab] = useState<"garages" | "parts" | "users">("garages");
   const [garages, setGarages] = useState<GarageRow[]>([]);
   const [parts, setParts] = useState<SparePartRow[]>([]);
   const [users, setUsers] = useState<UserRow[]>([]);
 
   useEffect(() => {
-    const sessionAuthorized = sessionStorage.getItem("adminAuthorized") === "true";
-    if (sessionAuthorized) {
+    const checkAdmin = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        navigate("/admin/login", { replace: true });
+        return;
+      }
+      const { data: isAdmin } = await supabase.rpc("has_role", {
+        _user_id: session.user.id,
+        _role: "admin",
+      });
+      if (!isAdmin) {
+        await supabase.auth.signOut();
+        navigate("/admin/login", { replace: true });
+        return;
+      }
       setIsAuthorized(true);
-    }
-  }, []);
+    };
+    checkAdmin();
+  }, [navigate]);
 
   const fetchAll = useCallback(async () => {
     if (tab === "garages") {
@@ -80,30 +82,9 @@ const AdminPanel = () => {
     fetchAll();
   }, [isAuthorized, fetchAll]);
 
-  const handleAdminLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const foundUser = AUTHORIZED_ADMINS.find(
-      (admin) => admin.username === username && admin.password === password
-    );
-
-    if (!foundUser) {
-      setAuthError("Invalid Credentials");
-      return;
-    }
-
-    setAuthError("");
-    setIsAuthorized(true);
-    sessionStorage.setItem("adminAuthorized", "true");
-    toast({ title: "Access granted", description: `Welcome, ${foundUser.username}.` });
-  };
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("adminAuthorized");
-    setIsAuthorized(false);
-    setUsername("");
-    setPassword("");
-    setAuthError("");
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/admin/login", { replace: true });
   };
 
   const toggleVerify = async (g: GarageRow) => {
@@ -127,45 +108,19 @@ const AdminPanel = () => {
     fetchAll();
   };
 
+  if (isAuthorized === null) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container py-8">
-        {!isAuthorized ? (
-          <div className="max-w-md mx-auto bg-card rounded-xl p-6 shadow-card">
-            <h1 className="text-2xl font-heading font-bold mb-2">Admin Login</h1>
-            <p className="text-sm text-muted-foreground mb-6">
-              Sign in with an authorized admin username and password.
-            </p>
-            <form onSubmit={handleAdminLogin} className="space-y-4">
-              <div>
-                <Label htmlFor="admin-username">Username</Label>
-                <Input
-                  id="admin-username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter username"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="admin-password">Password</Label>
-                <Input
-                  id="admin-password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                  required
-                />
-              </div>
-              {authError && <p className="text-sm text-destructive">{authError}</p>}
-              <Button type="submit" className="w-full">
-                Login
-              </Button>
-            </form>
-          </div>
-        ) : (
+        {isAuthorized && (
           <>
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-2xl font-heading font-bold">Admin Panel</h1>
